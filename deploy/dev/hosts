@@ -1,0 +1,4 @@
+# Genodata
+127.0.0.1         genodata-api.genopedia.local
+127.0.0.1         genodata-api-rabbitmq.genopedia.local
+127.0.0.1         genodata-admin.genopedia.local

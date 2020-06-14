@@ -1,0 +1,36 @@
+{% load util %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">{{ code }} - {{ field }}</h4>
+</div>
+<div class="modal-body">
+    <div class="table-responsive dataTables_wrapper">
+        <table id="data-table-basic" class="table table-hover table-condensed dataTable" style="table-layout: fixed">
+            <thead>
+                <tr>
+                    <th width="78%" class="">
+                        Value
+                    </th>
+                    <th width="14%" class="">
+                        Source
+                    </th>
+                    <th width="10%" class="">
+                        Version
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in fields %}
+                  <tr>
+                    <td><pre style='font-family: monospace; border: 1px solid white; background-color: white; color: black; border-radius: 0px; margin: 0px'>{{ item.value|show_format|safe }}</pre></td>
+                    <td>{{ item.source|check }}</td>
+                    <td>v{{ item.version }} ({{ item.timestamp|age }})</td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>

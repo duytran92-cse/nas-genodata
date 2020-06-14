@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-md-8">
+      <!-- Front-end dashboard -->
+      <div class="card">
+          <div class="card">
+              <div class="card-header">
+                  <h2>Dashboard</h2>
+              </div>
+                <div class="card-body">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%">Entity</th>
+                                <th style="width: 30%">Total of good quality</th>
+                                <th style="width: 20%">Total</th>
+                                <th style="width: 10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key,value in data.items %}
+                              <tr>
+                                  <td>{{ key|title }}</td>
+                                  <td>{{ value.total_of_good_quality }}</td>
+                                  <td>{{ value.total }}</td>
+                                  <td><a class="btn btn-xs btn-primary waves-effect" target="_blank" href="/{{ key }}/list">View</a></td>
+                              </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+      </div>
+      <!-- /front-end dashboard -->
+    </div>
+    <div class="col-md-4">
+      <!-- Tool box -->
+      <div class="card">
+          <div class="card-header card-padding">
+              <h2>Toolbox</h2>
+          </div>
+          <div class="card-body">
+              <div class="list-group">
+                <label><a style="margin-left: 30px" href="/">Link to conflict resolver tool</a> </label>
+                <a class="view-more" href="#"></a>
+              </div>
+          </div>
+      </div>
+      <!-- /Tool box -->
+
+    </div>
+</div>

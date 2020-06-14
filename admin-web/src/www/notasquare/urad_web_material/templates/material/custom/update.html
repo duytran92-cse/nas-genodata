@@ -1,0 +1,84 @@
+{% load util %}
+{% load static %}
+<style>
+  .modal-dialog{
+    width: 75%
+  }
+</style>
+<div class="row">
+  <!-- <div class="col-md-8"> -->
+      <div class="card">
+          <div class="card-header">
+              <h2>{{ title }}<small></small></h2>
+          </div>
+          <div class="table-responsive dataTables_wrapper">
+              <table id="data-table-basic" class="table table-hover table-condensed dataTable" style="table-layout: fixed">
+                  <tbody>
+                      {% for key,value in fields %}
+                        {% if key != 'code' and key != 'page_id' %}
+                        <tr>
+                          <td width="13%">
+                            <a href="#" data-toggle="tooltip" data-placement="right" title="{{ value.params }}" style="color: #5E5E5E">{{ key }}</a>
+                          </td>
+                          <td width="62%"><pre style='font-family: monospace; border: 1px solid white; background-color: white; color: black; border-radius: 0px; margin: 0px'>{{ value.value|show_format|safe }}</pre></td>
+                          <td width="10%">{{ value.source|check }}</td>
+                          <td width="8%"><small class="c-gray pull-right">v{{ value.version }} ({{ value.timestamp|age }})</small></td>
+                          <td width="7%"><a href='#' class="btn btn-primary version" style="font-size: 11px; text-transform: uppercase;" data-field="{{ key }}" data-code="{{ title }}" data-toggle="modal" data-target="#myModal">History</a></td>
+                        </tr>
+                        {% endif %}
+                      {% endfor %}
+                  </tbody>
+              </table>
+              <input type="hidden" data-page="{{ page_id }}"></input>
+          </div>
+
+          <!-- Modal -->
+          <div id="myModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+
+                  </div>
+
+              </div>
+          </div>
+
+          <script type="text/javascript">
+              jQuery(document).ready(function() {
+                  jQuery('.version').click(function() {
+                      var field = $(this).data('field');
+                      var code = $(this).data('code');
+                      var page_id = $('input[type=hidden]').data('page');
+                      // Get all versions of field
+                      jQuery.ajax({
+                          type: "get",
+                          dataType: 'text',
+                          url: '/' + page_id +'/history',
+                          data: {'field': field, 'code': code},
+                          async: false,
+                          success: function(result){
+                             jQuery('.modal-content').html(result)
+                          }
+                       });
+                     });
+                  $('[data-toggle="tooltip"]').tooltip();
+              });
+          </script>
+      </div>
+    <!-- </div> -->
+
+</div>
+
+<!-- <div class="col-md-4">
+  <div class="card">
+        <div class="card-header card-padding">
+            <h2>Toolbox</h2>
+        </div>
+        <div class="card-body">
+            <div class="list-group">
+              <label><a style="margin-left: 30px" href="/page/validation">Open validation page</a> </label>
+              <a class="view-more" href="#"></a>
+            </div>
+        </div>
+    </div>
+</div> -->

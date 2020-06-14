@@ -1,0 +1,19 @@
+<div class="card">
+    <div class="card-header">
+        <h2>{{ title }}<small>{{ subtitle }}</small></h2>
+        <ul class="actions">
+            <li>
+                {% for button in buttons %}
+                    <a href="{{ button.url }}"><i class="zmdi {{ button.iclass }}"></i></a>
+                {% endfor %}
+            </li>
+        </ul>
+    </div>
+
+    {{ table_form_html }}
+
+    <pre><code>
+      {{ data }}
+    </pre></code>
+
+</div>

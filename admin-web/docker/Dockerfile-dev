@@ -1,0 +1,6 @@
+FROM registry.novogenialab.com/notasquare-zero/images/nas-urad-admin:0.1
+
+# Python lib
+RUN pip install PyJWT
+
+ENV APP_ENV dev

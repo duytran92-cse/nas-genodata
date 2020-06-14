@@ -1,0 +1,116 @@
+import datetime, json
+from urad_api.registry import container
+from application import constants, models
+from application.library import managers
+
+class ModelSerializer(object):
+    def serialize(self, variation):
+        s = container.get_serializer()
+        return {
+            'id':                                   variation['id'],
+            'name':                                 variation['name'],
+            'synonym':                              variation['synonym'],
+            'minor_allele_frequency':               variation['position'],
+            'evidence_attributes':                  variation['evidence_attributes'],
+            'ancestral_allele':                     variation['ancestral_allele'],
+            'minor_allele_count':                   variation['minor_allele_count'],
+            'clinic_significance':                  variation['clinic_significance'],
+            'minor_allele':                         variation['minor_allele'],
+            'effects':                              variation['effects'],
+        }
+
+class DataManager(managers.DataManager):
+    def __init__(self):
+        super(DataManager, self).__init__()
+        self.set_key(models.Variation, 'Variation')
+        self.add_field('synonyms', 'list_string', '')
+        self.add_field('is_somatic', 'boolean', '')
+        self.add_field('minor_allele_frequency', 'list_string', '')
+        self.add_field('evidence_attributes', 'list_string', '')
+        self.add_field('ancestral_allele', 'list_string', '')
+        self.add_field('minor_allele_count', 'list_string', '')
+        self.add_field('clinic_significance', 'list_string', '')
+        self.add_field('minor_allele', 'list_string', '')
+        # self.add_field('effects', 'list_string', '')
+        self.add_field('chromosome', 'string', '')
+        self.add_field('publications', 'list_string', '')
+        self.add_field('genotype_frequency', 'list_string', '')
+        self.add_field('hgvs', 'list_string', '')
+        # self.add_field('allele', 'list_string', '')
+        self.add_field('allele_frequency', 'list_string', '')
+        # self.add_field('associated_disease', 'list_string', '')
+        self.add_field('attribute', 'list_string', '')
+        # self.add_field('var_type', 'list_string', '')
+        # self.add_field('var_property', 'list_string', '')
+        # self.add_field('var_disease', 'list_string', '')
+        self.add_field('reversed', 'list_string', '')
+        self.add_field('gwas-effects', 'list_string', '')
+        self.add_field('gwas-diseases', 'list_string', '')
+        self.add_field('gwas-publications', 'list_string', '')
+        self.add_field('1000-genomes', 'list_string', '')
+        self.add_field('disgenet-diseases', 'list_string', '')
+        self.add_field('genename', 'string', '')
+        self.add_field('allele_string', 'string', '')
+        self.add_field('consequence_types', 'string', '')
+        self.add_field('ensembl-id', 'string', '')
+        self.add_field('name', 'string', '')
+        self.add_field('vcf_U5', 'string', "In 5' UTR Location is in an untranslated region (UTR). FxnCode = 55")
+        self.add_field('vcf_ASS', 'string', "In acceptor splice site FxnCode = 73")
+        self.add_field('vcf_DSS', 'string', "In donor splice-site FxnCode = 75")
+        self.add_field('vcf_INT', 'string', "In Intron FxnCode = 6")
+        self.add_field('vcf_R3', 'string', "In 3' gene region FxnCode = 13")
+        self.add_field('vcf_R5', 'string', "In 5' gene region FxnCode = 15")
+        self.add_field('vcf_OTH', 'string', "Has other variant with exactly the same set of mapped positions on NCBI refernce assembly")
+        self.add_field('vcf_CFL', 'string', "Has Assembly conflict. This is for weight 1 and 2 variant that maps to different chromosomes on different assemblies.")
+        self.add_field('vcf_ASP', 'string', "Is Assembly specific. This is set if the variant only maps to one assembly")
+        self.add_field('vcf_MUT', 'string', "Is mutation (journal citation, explicit fact): a low frequency variation that is cited in journal and other reputable sources")
+        self.add_field('vcf_VLD', 'string', "Is Validated.  This bit is set if the variant has 2+ minor allele count based on frequency or genotype data.")
+        self.add_field('vcf_G5A', 'string', ">5% minor allele frequency in each and all populations")
+        self.add_field('vcf_G5', 'string', ">5% minor allele frequency in 1+ populations")
+        self.add_field('vcf_HD', 'string', "Marker is on high density genotyping kit (50K density or greater).  The variant may have phenotype associations present in dbGaP.")
+        self.add_field('vcf_GNO', 'string', "Genotypes available. The variant has individual genotype (in SubInd table).")
+        self.add_field('vcf_KGPhase1', 'string', "1000 Genome phase 1 (incl. June Interim phase 1)")
+        self.add_field('vcf_KGPhase3', 'string', "1000 Genome phase 3")
+        self.add_field('vcf_CDA', 'string', "Variation is interrogated in a clinical diagnostic assay")
+        self.add_field('vcf_LSD', 'string', "Submitted from a locus-specific database")
+        self.add_field('vcf_MTP', 'string', "Microattribution/third-party annotation(TPA:GWAS,PAGE)")
+        self.add_field('vcf_OM', 'string', "Has OMIM/OMIA")
+        self.add_field('vcf_NOC', 'string', "Contig allele not present in variant allele list. The reference sequence allele at the mapped position is not present in the variant allele list, adjusted for orientation.")
+        self.add_field('vcf_WTD', 'string', "Is Withdrawn by submitter If one member ss is withdrawn by submitter, then this bit is set.  If all member ss' are withdrawn, then the rs is deleted to SNPHistory")
+        self.add_field('vcf_NOV', 'string', "Rs cluster has non-overlapping allele sets. True when rs set has more than 2 alleles from different submissions and these sets share no alleles in common.")
+        self.add_field('vcf_CAF', 'string', "An ordered, comma delimited list of allele frequencies based on 1000Genomes, starting with the reference allele followed by alternate alleles as ordered in the ALT column. Where a 1000Genomes alternate allele is not in the dbSNPs alternate allele set, the allele is added to the ALT column.  The minor allele is the second largest value in the list, and was previuosly reported in VCF as the GMAF.  This is the GMAF reported on the RefSNP and EntrezSNP pages and VariationReporter")
+        self.add_field('vcf_COMMON', 'string', "RS is a common SNP.  A common SNP is one that has at least one 1000Genomes population with a minor allele of frequency >= 1% and for which 2 or more founders contribute to that minor allele frequency.")
+        self.add_field('vcf_CLNHGVS', 'string', "Variant names from HGVS.    The order of these variants corresponds to the order of the info in the other clinical  INFO tags.")
+        self.add_field('vcf_CLNALLE', 'string', "Variant alleles from REF or ALT columns.  0 is REF, 1 is the first ALT allele, etc.  This is used to match alleles with other corresponding clinical (CLN) INFO tags.  A value of -1 indicates that no allele was found to match a corresponding HGVS allele name.")
+        self.add_field('vcf_CLNSRC', 'string', "Variant Clinical Chanels")
+        self.add_field('vcf_CLNORIGIN', 'string', "Allele Origin. One or more of the following values may be added: 0 - unknown; 1 - germline; 2 - somatic; 4 - inherited; 8 - paternal; 16 - maternal; 32 - de-novo; 64 - biparental; 128 - uniparental; 256 - not-tested; 512 - tested-inconclusive; 1073741824 - other")
+        self.add_field('vcf_CLNSRCID', 'string', "Variant Clinical Channel IDs")
+        self.add_field('vcf_CLNSIG', 'string', "Variant Clinical Significance, 0 - Uncertain significance, 1 - not provided, 2 - Benign, 3 - Likely benign, 4 - Likely pathogenic, 5 - Pathogenic, 6 - drug response, 7 - histocompatibility, 255 - other")
+        self.add_field('vcf_CLNDSDB', 'string', "Variant disease database name")
+        self.add_field('vcf_CLNDSDBID', 'string', "Variant disease database ID")
+        self.add_field('vcf_CLNDBN', 'string', "Variant disease name")
+        self.add_field('vcf_CLNREVSTAT', 'string', "no_assertion - No assertion provided, no_criteria - No assertion criteria provided, single - Criteria provided single submitter, mult - Criteria provided multiple submitters no conflicts, conf - Criteria provided conflicting interpretations, exp - Reviewed by expert panel, guideline - Practice guideline")
+        self.add_field('vcf_CLNACC', 'string', "Variant Accession and Versions")
+        self.add_field('vcf_REF', 'string', "Has reference A coding region variation where one allele in the set is identical to the reference sequence. FxnCode = 8")
+        self.add_field('vcf_ALT', 'string', '')
+        self.add_field('vcf_RS', 'string', "dbSNP ID (i.e. rs number)")
+        self.add_field('vcf_RSPOS', 'string', "Chr position reported in dbSNP")
+        self.add_field('vcf_RV', 'boolean', "RS orientation is reversed")
+        self.add_field('vcf_VP', 'string', "Variation Property.  Documentation is at ftp://ftp.ncbi.nlm.nih.gov/snp/specs/dbSNP_BitField_latest.pdf")
+        self.add_field('vcf_GENEINFO', 'string', "Pairs each of gene symbol:gene id.  The gene symbol and id are delimited by a colon (:) and each pair is delimited by a vertical bar (|)")
+        self.add_field('vcf_dbSNPBuildID', 'string', "First dbSNP Build for RS")
+        self.add_field('vcf_SAO', 'string', "Variant Allele Origin: 0 - unspecified, 1 - Germline, 2 - Somatic, 3 - Both")
+        self.add_field('vcf_SSR', 'string', "Variant Suspect Reason Codes (may be more than one value added together) 0 - unspecified, 1 - Paralog, 2 - byEST, 4 - oldAlign, 8 - Para_EST, 16 - 1kg_failed, 1024 - other")
+        self.add_field('vcf_WGT', 'string', "Weight, 00 - unmapped, 1 - weight 1, 2 - weight 2, 3 - weight 3 or more")
+        self.add_field('vcf_VC', 'string', "Variation Class")
+        self.add_field('vcf_PM', 'string', "Variant is Precious(Clinical,Pubmed Cited)")
+        self.add_field('vcf_TPA', 'string', "Provisional Third Party Annotation(TPA) (currently rs from PHARMGKB who will give phenotype data)")
+        self.add_field('vcf_PMC', 'string', "Links exist to PubMed Central article")
+        self.add_field('vcf_S3D', 'string', "Has 3D structure - SNP3D table")
+        self.add_field('vcf_SLO', 'string', "Has SubmitterLinkOut - From SNP->SubSNP->Batch.link_out")
+        self.add_field('vcf_NSF', 'string', "Has non-synonymous frameshift A coding region variation where one allele in the set changes all downstream amino acids. FxnClass = 44")
+        self.add_field('vcf_NSM', 'string', "Has non-synonymous missense A coding region variation where one allele in the set changes protein peptide. FxnClass = 42")
+        self.add_field('vcf_NSN', 'string', "Has non-synonymous nonsense A coding region variation where one allele in the set changes to STOP codon (TER). FxnClass = 41")
+        self.add_field('vcf_REF', 'string', "Has reference A coding region variation where one allele in the set is identical to the reference sequence. FxnCode = 8")
+        self.add_field('vcf_SYN', 'string', "Has synonymous A coding region variation where one allele in the set does not change the encoded amino acid. FxnCode = 3")
+        self.add_field('vcf_U3', 'string', "In 3' UTR Location is in an untranslated region (UTR). FxnCode = 53")
